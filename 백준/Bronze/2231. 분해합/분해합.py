@@ -3,12 +3,12 @@ input = sys.stdin.readline
 
 N = int(input())
 
-for i in range(1, N+1):
-  num = sum(map(int, str(i)))
-  total_num = i + num
-  if total_num == N:
-    print(i)
-    break
-  elif i == N:
+start = max(1, N - 9 * len(str(N)))
+
+for i in range(start, N + 1):
+    num = sum(map(int, str(i)))
+    if i + num == N:
+        print(i)
+        break
+else:
     print(0)
-    break
