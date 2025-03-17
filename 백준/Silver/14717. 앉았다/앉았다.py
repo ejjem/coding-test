@@ -1,58 +1,33 @@
+from itertools import combinations
 import sys
 input = sys.stdin.readline
 
-list_a, list_b = list(range(1, 11)), list(range(1, 11))
+cards = [i for i in range(1, 11)] * 2
+
 lose = 0
-total = 18 * 17 / 2
+total = 18 * 17 / 2  # 상대방이 가질 수 있는 모든 경우의 수
+
 A, B = map(int, input().split())
 
-if A == B: # 땡
-  list_a.remove(A)
-  list_b.remove(B)
-  for i in list_a:
-    for j in list_b:
-      if i == j and i > A: # 땡한테 진 상황
-        lose += 1
-      else: # 이긴 상황
-        continue
-        
-  answer = (total - lose) / total
-  print(f"{answer:.3f}")
+cards.remove(A)
+cards.remove(B)
 
-else : # 끗
-  list_a.remove(A)
-  list_a.remove(B)
-  index = (A + B) % 10 # 끗 계산
-  
-  for i in list_a:
-    for j in list_b:
-      if i == j: # 땡한테 진 상황
-        lose += 1 #어차피 여기선 8
-      else:
-        tmp = (i + j) % 10 # 상대 끗 계산
-        if index > tmp: #이긴 상황
-          continue
-        else: # 진 or 비긴 상황
-          lose += 1
-          
-  for i in range(len(list_a)):
-    for j in range(i +1, len(list_a)):
-      tmp = (list_a[i] + list_a[j]) % 10 # 상대 끗 계산
-      if index > tmp: #이긴 상황
-        continue
-      else: # 진 or 비긴 상황
-        lose += 1
-        
-  for i in range(len(list_b)):
-    for j in range(i +1, len(list_b)):
-      tmp = (list_b[i] + list_b[j]) % 10 # 상대 끗 계산
-      if index > tmp: #이긴 상황
-        continue
-      else: # 진 or 비긴 상황
-        lose += 1
-      
-  answer = (total - lose) / total
-  print(f"{answer:.3f}")
+# 내 족보 계산
+if A == B:
+    my_rank = (10 + A)  # 땡
+else:
+    my_rank = (A + B) % 10  # 끗
 
-
+# 상대방 가능한 패 모든 조합 구하기 (O(N^2))
+for opp_A, opp_B in combinations(cards, 2):
+    if opp_A == opp_B:
+        opp_rank = (10 + opp_A)  # 상대가 땡
+    else:
+        opp_rank = (opp_A + opp_B) % 10  # 상대가 끗
     
+    # 승패 비교
+    if my_rank <= opp_rank:
+        lose += 1  # 내가 진 경우만 카운트
+        
+answer = (total - lose) / total
+print(f"{answer:.3f}")
