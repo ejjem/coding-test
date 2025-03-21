@@ -20,17 +20,11 @@ for i in range(len(price)):
     up = 0
     down = 0
   elif today_price > past: # 가격 상승
-    if up >= 1: # 2일 연속 가격 상승중
-      up += 1
-    else: # 첫 가격 상승
-      up = 1
-      down = 0
+    down = 0
+    up += 1
   elif today_price < past: # 가격 하락
-    if down >= 1: # 2일 연속 가격 하락중
-      down += 1
-    else: # 첫 가격 하락
-      up = 0
-      down = 1
+    up = 0
+    down += 1
         
   if up >= 3:
     S_money += S_asset * today_price
