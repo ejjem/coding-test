@@ -9,6 +9,5 @@ for _ in range(M):
     a = cup.index(i)
     b = cup.index(j)
     cup[a], cup[b] = cup[b], cup[a]
-  i, j = 0, 0
   
 print(cup[0])
