@@ -10,37 +10,41 @@ for _ in range(M):
   graph[u].append(v)
   graph[v].append(u)
 
+for key in graph:
+  graph[key].sort()
+
 
 def DFS(node):
   global graph
   stack = [node]
+  visited = set()
   result = []
   while len(stack) != 0:
     tmp = stack.pop()
-    if tmp not in result:
+    if tmp not in visited:
+      visited.add(tmp)
       result.append(tmp)
     if len(graph[tmp]) != 0:
-      arr = graph[tmp]
-      arr.sort(reverse=True)
-      for i in range(len(arr)):
-        if arr[i] not in result:
-          stack.append(arr[i])
+      for i in reversed(graph[tmp]):
+        if i not in visited:
+          stack.append(i)
   print(" ".join(map(str, result)))
 
 def BFS(node):
   global graph
   queue = deque([node])
+  visited = set()
   result = []
   while len(queue) != 0:
     tmp = queue.popleft()
-    if tmp not in result:
+    if tmp not in visited:
+      visited.add(tmp)
       result.append(tmp)
     if len(graph[tmp]) != 0:
-      arr = graph[tmp]
-      arr.sort()
-      for i in range(len(arr)):
-        if arr[i] not in result:
-          queue.append(arr[i])
+      for i in graph[tmp]:
+        if i not in visited:
+          queue.append(i)
+          
   print(" ".join(map(str, result)))
   
 DFS(V)
