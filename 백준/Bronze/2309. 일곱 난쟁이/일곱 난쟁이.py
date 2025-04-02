@@ -1,30 +1,22 @@
 import sys
+from itertools import combinations
 input = sys.stdin.readline
 
-data = [int(input()) for _ in range(9)]
-def print_answer(answers):
-  for answer in answers:
-    print(answer)
+tall = []
+for _ in range(9):
+  tall.append(int(input()))
+
+number = list(range(9))
+total = sum(tall)
+for x, y in combinations(number, 2):
+  if total - tall[x] - tall[y] == 100:
+    tmp1 = tall[x]
+    tmp2 = tall[y]
+    tall.remove(tmp1)
+    tall.remove(tmp2)
+    break
+
+tall.sort()
+print("\n".join(map(str, tall)))
     
-data_sum = sum(data)
-
-def start():
-  for i in range(8):
-    for j in range(i + 1, 9):
-      tmp1 = data[i]
-      tmp2 = data[j]
-      tmp = tmp1 + tmp2
-      if data_sum - tmp == 100:
-        data.remove(tmp1)
-        data.remove(tmp2)
-        data.sort()
-        print_answer(data)
-        return
-
-start()
-
-        
-
-
-
-
+  
