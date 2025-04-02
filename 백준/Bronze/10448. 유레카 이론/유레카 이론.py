@@ -1,26 +1,26 @@
 import sys
 input = sys.stdin.readline
 
-N = int(input())
-data = [int(input()) for _ in range(N)]
-answer = [0] * N
+T = int(input())
+answer = [0] * T
+tri = []
+for i in range(1, 45):
+  tri.append(i*(i+1)//2)
 
-def solve(target):
-  maximum = 0
-  for i in range(1, 46):
-    if i * (i + 1) // 2 >= target:
-      maximum = i
-      break
+def search(K, tri, num):
+  for i in tri:
+    for j in tri:
+      for k in tri:
+        if i + j + k == K:
+          answer[num] = 1
+          return
+
+
+for num in range(T):
+  K = int(input())
+  search(K, tri, num)
   
-  for i in range(1, maximum):
-    for j in range(1, maximum):
-      for k in range(1, maximum):
-        tmp = (i * (i + 1) // 2) + (j * (j + 1) // 2) + (k * (k + 1) // 2)
-        if target == tmp:
-          return 1
-  return 0
-
-for i in range(N):
-  answer[i] = solve(data[i])
+  
 
 print("\n".join(map(str, answer)))
+  
