@@ -2,28 +2,26 @@ import sys
 input = sys.stdin.readline
 
 N, M = map(int, input().split())
-board = [list(input().rstrip()) for _ in range(N)]
+# N: 세로, M: 가로
+board = []
+for i in range(N):
+  board.append(input().rstrip())
+minimum = float('inf')
 
-answer = float('inf')
-
-for row in range(N - 7):
-  for col in range(M - 7):
-    cnt_1, cnt_2 = 0, 0
-    
-    for i in range(8):
-      for j in range(8):
-        if (i + j) % 2 == 0:
-          if board[row + i][col + j] != 'W':
-            cnt_1 += 1
-          if board[row + i][col + j] != 'B':
-            cnt_2 += 1
-        else:
-          if board[row + i][col + j] != 'B':
-            cnt_1 += 1
-          if board[row + i][col + j] != 'W':
-            cnt_2 += 1
-    
-    answer = min(answer, cnt_1, cnt_2)
-
-print(answer)
-      
+for row_start in range(N-7):
+  for col_start in range(M-7):
+    case1, case2 = 0, 0
+    for row in range(8):
+      for col in range(8):
+        if (row + col) % 2 == 0:
+          if board[row_start + row][col_start + col] == 'W':
+            case2 += 1
+          else:
+            case1 += 1
+        else: 
+          if board[row_start + row][col_start + col] == 'W':
+            case1 += 1
+          else:
+            case2 += 1
+    minimum = min(minimum, case1, case2)
+print(minimum)
