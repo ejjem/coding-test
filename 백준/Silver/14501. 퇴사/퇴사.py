@@ -1,22 +1,11 @@
 import sys
 input = sys.stdin.readline
-
-N = int(input())  
-schedule = [tuple(x for x in map(int, input().split())) for _ in range(N)]
-maximum = 0
-
-def search(day, cnt):
-  global maximum
-  if day >= N:
-    maximum = max(maximum, cnt)
-    return
-  
-  search(day + 1, cnt)
-  
-  need_day, pay = schedule[day]
-  cnt += pay
-  if need_day + day <= N:
-    search(need_day + day, cnt)
-  
-search(0, 0)
-print(maximum)
+N = int(input())
+work = [tuple(map(int, input().split())) for _ in range(N)]
+dp = [0] * (N+1) # 0 ~ N
+for i in range(N):
+  day, pay = work[i]
+  dp[i+1] = max(dp[i+1], dp[i])
+  if day + i <= N:
+    dp[i+day] = max(dp[i+day], dp[i]+pay)
+print(max(dp))
