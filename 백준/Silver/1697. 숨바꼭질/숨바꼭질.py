@@ -1,28 +1,18 @@
-import sys
 from collections import deque
+import sys
 input = sys.stdin.readline
+
 N, K = map(int, input().split())
+arr = [0] * 100001
 queue = deque()
-visited = set()
-queue.append((N, 0))
-visited.add(N)
-
-while True:
-  n, time = queue.popleft()
-  if n == K:
-    print(time)
+queue.append(N)
+while queue:
+  point = queue.popleft()
+  if point == K:
     break
-  if n < K:
-    if n + 1 not in visited:
-      visited.add(n+1)
-      queue.append((n + 1, time + 1))
-    if n * 2 not in visited:
-      visited.add(2*n)
-      queue.append((2*n, time + 1))
-  if n > 0:
-    if n - 1 not in visited:
-      visited.add(n-1)
-      queue.append((n-1, time + 1))
-
-  
-  
+  targets = [point - 1, point + 1, point * 2]
+  for target in targets:
+    if 0 <= target <= 100000 and arr[target] == 0:
+      arr[target] = arr[point] + 1
+      queue.append(target)
+print(arr[K])
