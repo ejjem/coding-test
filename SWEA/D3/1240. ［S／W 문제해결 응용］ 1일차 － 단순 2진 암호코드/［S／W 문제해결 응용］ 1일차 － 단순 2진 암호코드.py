@@ -1,11 +1,11 @@
 T = int(input())
 for tc in range(1, T+1):
   N, M = map(int, input().split())
-  board = [ list(input().rstrip()) for _ in range(N)]
-  decoding = ('0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011')
+  data = [ list(input().rstrip()) for _ in range(N)]
   target = []
-  find = False
-  for row in board:
+  # 암호문 위치 찾기
+  for row in data:
+    find = False
     if '1' in row:
       for i in range(len(row)-1, -1, -1):
         if row[i] == '1':
@@ -14,21 +14,19 @@ for tc in range(1, T+1):
           break
     if find:
       break
-  arr = []
-  for j in range(7, 57, 7):
-    tmp = target[j-7:j]
-    tmp_check = "".join(tmp)
-    if tmp_check in decoding:
-      arr.append(decoding.index(tmp_check))
-  if len(arr) == 8:
-    arr_odd = []
-    arr_even = []
-    for i in range(0, len(arr), 2):
-      arr_even.append(arr[i])
-    for j in range(1, len(arr), 2):
-      arr_odd.append(arr[j])
-    cal = (sum(arr_odd) + sum(arr_even)*3) % 10
-    if cal == 0:
-      print(f"#{tc} {sum(arr)}")
-    else:
-      print(f"#{tc} 0")
+  # 암호문 분석
+  decoding = ('0001101', '0011001', '0010011', '0111101', '0100011', '0110001', '0101111', '0111011', '0110111', '0001011')
+  decode = []
+  for i in range(0, 56, 7):
+    tmp = target[i:i+7]
+    decode.append(decoding.index("".join(tmp)))
+  # 암호문 확인
+  decode_sum = 0
+  for i in range(0, 8, 2):
+    decode_sum += decode[i] * 3
+  for i in range(1, 8, 2):
+    decode_sum += decode[i]
+  if decode_sum % 10 == 0:
+    print(f"#{tc} {sum(decode)}")
+  else:
+    print(f"#{tc} 0")
