@@ -1,19 +1,15 @@
 import sys
 input = sys.stdin.readline
 T = int(input())
-for tc in range(1, T+1):
+dp = [0] * 12
+dp[0] = 1
+for i in range(1, 12):
+    if i >= 1:
+        dp[i] += dp[i-1]
+    if i >= 2:
+        dp[i] += dp[i-2]
+    if i >= 3:
+        dp[i] += dp[i-3]
+for _ in range(T):
     N = int(input())
-    stack = [N]
-    count = 0
-    while stack:
-        target = stack.pop()
-        if target == 0:
-            count += 1
-
-        if target >= 3:
-            stack.append(target-3)
-        if target >= 2:
-            stack.append(target-2)
-        if target >= 1:
-            stack.append(target-1)
-    print(count)
+    print(dp[N])
