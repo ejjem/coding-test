@@ -9,18 +9,14 @@ class Main {
         int N = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
         int maximum = Integer.MIN_VALUE;
-        int[] scores = new int[N];
+        double total = 0;
         for(int i=0; i<N; i++){
             int tmp = Integer.parseInt(st.nextToken());
-            scores[i] = tmp;
+            total += (double)tmp;
             if(maximum < tmp){
                 maximum = tmp;
             }
         }
-        double total = 0;
-        for(int i=0; i<N; i++){
-            total += (double)scores[i]/maximum * 100;
-        }
-        System.out.println(total/N);
+        System.out.println( (total/maximum * 100)/N);
     }
 }
