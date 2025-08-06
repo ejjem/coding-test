@@ -5,6 +5,7 @@ import java.io.*;
 // The main method must be in a class named "Main".
 class Main {
     public static void main(String[] args) throws Exception{
+        StringBuilder answer = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
@@ -20,10 +21,11 @@ class Main {
             int i = Integer.parseInt(st.nextToken());
             int j = Integer.parseInt(st.nextToken());
             if (i == 1){
-                System.out.println(sum_array[j-1]);
+                answer.append(sum_array[j-1]);
             }
-            else System.out.println(sum_array[j-1] - sum_array[i-2]);
+            else answer.append(sum_array[j-1] - sum_array[i-2]);
+            answer.append("\n");
         }
-        
+        System.out.println(answer);
     }
 }
