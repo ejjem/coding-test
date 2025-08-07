@@ -1,30 +1,30 @@
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 
-// The main method must be in a class named "Main".
 class Main {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int N = Integer.parseInt(st.nextToken());
         int M = Integer.parseInt(st.nextToken());
-        long[] S = new long[N];
-        long[] C = new long[M];
-        long answer = 0;
         st = new StringTokenizer(br.readLine());
-        S[0] = Integer.parseInt(st.nextToken());
-        for(int i=1;i<N;i++){
-            S[i] = S[i-1] + Integer.parseInt(st.nextToken());
+        long[] arr = new long[N];
+        long[] arr2 = new long[M];
+        arr[0] = Integer.parseInt(st.nextToken());
+        for(int idx=1; idx<N; idx++){
+            arr[idx] = arr[idx-1] + Integer.parseInt(st.nextToken());
         }
-        for(int i=0; i<N; i++){
-            int remainder = (int) (S[i] % M);
-            if (remainder == 0) answer ++;
-            C[remainder]++;
+        int tmp = 0;
+        long answer = 0;
+        for(int idx=0; idx<N; idx++){
+            tmp = (int) (arr[idx] % M );
+            if(tmp == 0) answer += 1;
+            arr2[tmp] ++;
         }
-        for(int i=0;i<M;i++){
-            if(C[i] > 1){
-                answer += (C[i] * (C[i] - 1) / 2);
+        
+        for(int idx=0; idx<M; idx++){
+            if(arr2[idx] > 1){
+                answer += ( arr2[idx] * (arr2[idx] - 1) / 2 );
             }
         }
         System.out.println(answer);
