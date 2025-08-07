@@ -1,21 +1,41 @@
-T = int(input())
-answer = []
-for ts in range(1, T+1):
-  N, M = map(int, input().split())
-  maximum = -float("inf")
-  fly = [ list(map(int, input().split())) for _ in range(N)]
-  fly_sum = [ [0] * (N+1) for _ in range(N+1)]
-  fly_sum[1][1] = fly[0][0]
-  for i in range(2, N+1):
-    fly_sum[1][i] = fly_sum[1][i-1] + fly[0][i-1]
-    fly_sum[i][1] = fly_sum[i-1][1] + fly[i-1][0]
-  for i in range(2, N+1):
-    for j in range(2, N+1):
-      fly_sum[i][j] = fly_sum[i-1][j] + fly_sum[i][j-1]  + fly[i-1][j-1] - fly_sum[i-1][j-1]
-  for i in range(M, N+1):
-    for j in range(M, N+1):
-      tmp = fly_sum[i][j] - fly_sum[i-M][j] - fly_sum[i][j-M] + fly_sum[i-M][j-M]
-      maximum = max(maximum, tmp)
-  answer.append(f"#{ts} {maximum}")
+import java.util.*;
+import java.io.*;
 
-print("\n".join(answer))
+class Solution {
+    static BufferedReader br;
+    static StringTokenizer st;
+    static StringBuilder sb;
+    public static void main(String[] args) throws Exception {
+        br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine());
+        sb = new StringBuilder();
+        for(int tc=1;tc<T+1;tc++){
+            st = new StringTokenizer(br.readLine());
+            int N = Integer.parseInt(st.nextToken());
+            int M = Integer.parseInt(st.nextToken());
+            int[][] fly = new int[N][N];
+            for(int i=0;i<N;i++){
+                st = new StringTokenizer(br.readLine());
+                for(int j=0;j<N;j++){
+                    fly[i][j] = Integer.parseInt(st.nextToken());
+                }
+            }
+    
+            int maximum = Integer.MIN_VALUE;
+            int fly_sum = 0;
+            for(int i=0; i<N; i++){
+                for(int j=0; j<N; j++){
+                    fly_sum = 0;
+                    for(int ii=0; ii<M; ii++){
+                        for(int jj=0; jj<M; jj++){
+                            if(i+ii < N && j+jj < N) fly_sum += fly[i+ii][j+jj];
+                        }
+                    }
+                    if(fly_sum > maximum) maximum = fly_sum;
+                }
+            }
+            sb.append("#").append(tc).append(" ").append(maximum).append("\n");
+        }
+        System.out.println(sb);
+    }
+}
