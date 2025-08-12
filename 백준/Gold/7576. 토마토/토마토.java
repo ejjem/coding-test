@@ -21,18 +21,6 @@ class Main {
     		this.y = y;
     		this.cnt = cnt;
     	}
-    	
-    	int getX() {
-    		return x;
-    	}
-    	
-    	int getY() {
-    		return y;
-    	}
-    	
-    	int getCnt() {
-    		return cnt;
-    	}
     }
     
     
@@ -62,9 +50,9 @@ class Main {
     	cnt = 0;
     	while(!queue.isEmpty()) {
     		Point tmp = queue.pollFirst();
-    		int x = tmp.getX();
-    		int y = tmp.getY();
-    		cnt = tmp.getCnt();
+    		int x = tmp.x;
+    		int y = tmp.y;
+    		cnt = tmp.cnt;
     		
     		for(int i=0; i<4; i++) {
     			int dxx = dx[i]; int dyy = dy[i];
