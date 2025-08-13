@@ -9,10 +9,10 @@ class Solution {
     static BufferedWriter bw;
     static StringBuilder sb;
     static int N, B;
-    static long[] tall;
-    static long answer;
+    static int[] tall;
+    static int answer;
     static boolean end;
-    static void dfs(int index, long sum) {
+    static void dfs(int index, int sum) {
     	if(end) return;
     	if(sum == B) {
     		answer = B;
@@ -42,12 +42,12 @@ class Solution {
     		N = Integer.parseInt(st.nextToken());
     		B = Integer.parseInt(st.nextToken());
     		st = new StringTokenizer(br.readLine());
-    		tall = new long[N];
+    		tall = new int[N];
     		end = false;
     		for(int i=0;i<N;i++) {
-    			tall[i] = Long.parseLong(st.nextToken());
+    			tall[i] = Integer.parseInt(st.nextToken());
     		}
-    		answer = Long.MAX_VALUE;
+    		answer = Integer.MAX_VALUE;
         	dfs(0, 0);
         	sb.append("#").append(tc).append(" ").append(answer - B).append("\n");
     	}
