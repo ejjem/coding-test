@@ -14,7 +14,6 @@ class Solution {
     static boolean end;
     static void dfs(int index, long sum) {
     	if(end) return;
-    	
     	if(sum == B) {
     		answer = B;
     		end = true;
@@ -25,10 +24,11 @@ class Solution {
     		return;
     	}
     	
-    	for(int i=index; i<N; i++) {
-    		dfs(i+1, sum + tall[i]);
-    		dfs(i+1, sum);
-    	}
+    	if(index == N) return;
+    	
+    	
+    	dfs(index+1, sum + tall[index]);
+    	dfs(index+1, sum);
     }
     
     
