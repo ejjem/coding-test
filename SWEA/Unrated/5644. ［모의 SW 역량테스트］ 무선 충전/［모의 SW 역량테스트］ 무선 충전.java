@@ -1,138 +1,143 @@
 import java.util.*;
 import java.io.*;
 
-class Node {
-    int x;
-    int y;
-    public Node(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-}
-
-class BC {
-    Node point;
+class Point {
+    int r;
     int c;
-    int p;
-    public BC(int x, int y, int c, int p) {
-        this.point = new Node(x, y);
+    public Point(int r, int c) {
+        this.r = r;
         this.c = c;
-        this.p = p;
     }
 }
 
-class Solution {
+class Charger {
+    Point pos;
+    int coverage;
+    int power;
+    public Charger(int y, int x, int coverage, int power) {
+        this.pos = new Point(y, x);
+        this.coverage = coverage;
+        this.power = power;
+    }
+}
 
-    static ArrayList<BC>[][] map;
-    static int[] dx = {0, -1, 0, 1, 0};
-    static int[] dy = {0, 0, 1, 0, -1};
-    static int ans;
-    
+public class Solution {
+
+    static ArrayList<Charger>[][] board;
+    static int[] dr = {0, -1, 0, 1, 0};
+    static int[] dc = {0, 0, 1, 0, -1};
+    static int total;
+
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder out = new StringBuilder();
         StringTokenizer st;
 
-        int T = Integer.parseInt(br.readLine());
-        for (int test_case = 1; test_case <= T; test_case++) {
-            ans = 0;
+        int T = Integer.parseInt(in.readLine());
+        for (int tc = 1; tc <= T; tc++) {
+            total = 0;
 
-            map = new ArrayList[10][10];
+            board = new ArrayList[10][10];
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
-                    map[i][j] = new ArrayList<>();
+                    board[i][j] = new ArrayList<>();
                 }
             }
-            
-            st = new StringTokenizer(br.readLine());
-            int M = Integer.parseInt(st.nextToken());
-            int N = Integer.parseInt(st.nextToken());
-            int[] A = new int[M];
-            int[] B = new int[M];
-            st = new StringTokenizer(br.readLine());
-            for (int i = 0; i < M; i++) {
-                A[i] = Integer.parseInt(st.nextToken());
-            }
-            st = new StringTokenizer(br.readLine());
-            for (int i = 0; i < M; i++) {
-                B[i] = Integer.parseInt(st.nextToken());
-            }
 
-            BC[] BCs = new BC[N];
-            for (int i = 0; i < N; i++) {
-                st = new StringTokenizer(br.readLine());
-                int y = Integer.parseInt(st.nextToken());
-                int x = Integer.parseInt(st.nextToken());
-                int c = Integer.parseInt(st.nextToken());
-                int p = Integer.parseInt(st.nextToken());
-                BCs[i] = new BC(x - 1, y - 1, c, p);
-                bfs(BCs[i]);
+            st = new StringTokenizer(in.readLine());
+            int moveCount = Integer.parseInt(st.nextToken());
+            int chargerCount = Integer.parseInt(st.nextToken());
+
+            int[] moveA = new int[moveCount];
+            int[] moveB = new int[moveCount];
+
+            st = new StringTokenizer(in.readLine());
+            for (int i = 0; i < moveCount; i++) {
+                moveA[i] = Integer.parseInt(st.nextToken());
+            }
+            st = new StringTokenizer(in.readLine());
+            for (int i = 0; i < moveCount; i++) {
+                moveB[i] = Integer.parseInt(st.nextToken());
             }
 
-            Node currentA = new Node(0, 0);
-            Node currentB = new Node(9, 9);
-
-            calc(currentA, currentB);
-            
-            for (int i = 0; i < M; i++) {
-                currentA.x = currentA.x + dx[A[i]];
-                currentA.y = currentA.y + dy[A[i]];
-                currentB.x = currentB.x + dx[B[i]];
-                currentB.y = currentB.y + dy[B[i]];
-                calc(currentA, currentB);
+            Charger[] chargers = new Charger[chargerCount];
+            for (int i = 0; i < chargerCount; i++) {
+                st = new StringTokenizer(in.readLine());
+                int x = Integer.parseInt(st.nextToken()) - 1;
+                int y = Integer.parseInt(st.nextToken()) - 1;
+                int cov = Integer.parseInt(st.nextToken());
+                int pow = Integer.parseInt(st.nextToken());
+                chargers[i] = new Charger(y, x, cov, pow);
+                spread(chargers[i]);
             }
 
-            sb.append("#").append(test_case).append(" ").append(ans).append("\n");
+            Point posA = new Point(0, 0);
+            Point posB = new Point(9, 9);
+
+            charge(posA, posB);
+
+            for (int i = 0; i < moveCount; i++) {
+                posA.r += dr[moveA[i]];
+                posA.c += dc[moveA[i]];
+                posB.r += dr[moveB[i]];
+                posB.c += dc[moveB[i]];
+                charge(posA, posB);
+            }
+
+            out.append("#").append(tc).append(" ").append(total).append("\n");
         }
-        System.out.print(sb);
+        System.out.print(out);
     }
 
-    static void bfs(BC bc) {
-        int[][] visit = new int[10][10];
-        ArrayDeque<Node> dq = new ArrayDeque<>();
-        visit[bc.point.x][bc.point.y] = 1;
-        map[bc.point.x][bc.point.y].add(bc);
-        dq.addLast(new Node(bc.point.x, bc.point.y));
-        while (!dq.isEmpty()) {
-            Node cur = dq.pollFirst();
+    static void spread(Charger ch) {
+        int[][] visited = new int[10][10];
+        ArrayDeque<Point> q = new ArrayDeque<>();
+        visited[ch.pos.r][ch.pos.c] = 1;
+        board[ch.pos.r][ch.pos.c].add(ch);
+        q.addLast(new Point(ch.pos.r, ch.pos.c));
+
+        while (!q.isEmpty()) {
+            Point cur = q.pollFirst();
             for (int d = 1; d <= 4; d++) {
-                int nx = cur.x + dx[d];
-                int ny = cur.y + dy[d];
-                if (nx < 0 || nx >= 10 || ny < 0 || ny >= 10) continue;
-                if (visit[nx][ny] == 0) {
-                    visit[nx][ny] = visit[cur.x][cur.y] + 1;
-                    map[nx][ny].add(bc);
-                    if (visit[nx][ny] <= bc.c)
-                        dq.addLast(new Node(nx, ny));
-                }
-            }
-        }
-    }
-
-    static void calc(Node A, Node B) {
-        ArrayList<BC> BC_A = map[A.x][A.y];
-        ArrayList<BC> BC_B = map[B.x][B.y];
-        int sum = 0;
-        if (BC_A.isEmpty() && BC_B.isEmpty()) return;
-        else if (BC_A.isEmpty()) {
-            for (BC b : BC_B) {
-                sum = Math.max(sum, b.p);
-            }
-        } else if (BC_B.isEmpty()) {
-            for (BC a : BC_A) {
-                sum = Math.max(sum, a.p);
-            }
-        } else {
-            for (BC a : BC_A) {
-                for (BC b : BC_B) {
-                    if (a == b) {
-                        sum = Math.max(sum, (a.p + b.p) / 2);
-                    } else {
-                        sum = Math.max(sum, a.p + b.p);
+                int nr = cur.r + dr[d];
+                int nc = cur.c + dc[d];
+                if (nr < 0 || nr >= 10 || nc < 0 || nc >= 10) continue;
+                if (visited[nr][nc] == 0) {
+                    visited[nr][nc] = visited[cur.r][cur.c] + 1;
+                    board[nr][nc].add(ch);
+                    if (visited[nr][nc] <= ch.coverage) {
+                        q.addLast(new Point(nr, nc));
                     }
                 }
             }
         }
-        ans += sum;
     }
-}    
+
+    static void charge(Point a, Point b) {
+        ArrayList<Charger> listA = board[a.r][a.c];
+        ArrayList<Charger> listB = board[b.r][b.c];
+        int best = 0;
+
+        if (listA.isEmpty() && listB.isEmpty()) return;
+        else if (listA.isEmpty()) {
+            for (Charger cb : listB) {
+                best = Math.max(best, cb.power);
+            }
+        } else if (listB.isEmpty()) {
+            for (Charger ca : listA) {
+                best = Math.max(best, ca.power);
+            }
+        } else {
+            for (Charger ca : listA) {
+                for (Charger cb : listB) {
+                    if (ca == cb) {
+                        best = Math.max(best, (ca.power + cb.power) / 2);
+                    } else {
+                        best = Math.max(best, ca.power + cb.power);
+                    }
+                }
+            }
+        }
+        total += best;
+    }
+}
