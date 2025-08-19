@@ -39,11 +39,6 @@ public class Solution {
                             answer += 2;
                             flag = 2;
                         }
-                        // 2 1
-                        else {
-                            answer += 2;
-                            flag = 1;
-                        }
                     }
                     else {
                         needTogrow -= 2;
