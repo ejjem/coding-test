@@ -1,143 +1,139 @@
 import java.util.*;
+import java.lang.*;
 import java.io.*;
 
-class Point {
-    int r;
-    int c;
-    public Point(int r, int c) {
-        this.r = r;
-        this.c = c;
+
+class Solution {
+    static BufferedReader br;
+    static BufferedWriter bw;
+    static StringBuilder sb;
+    static StringTokenizer st;
+    static int[] positionA; 
+    static int[] positionB;
+    static int[] moveA;
+    static int[] moveB;
+    static int[][] dist = {{0, 0}, {0, -1}, {1, 0}, {0, 1}, {-1, 0}}; 
+    static int distance(int xa, int xb, int ya, int yb) {
+    	return Math.abs(xa - xb) + Math.abs(ya - yb);
     }
-}
-
-class Charger {
-    Point pos;
-    int coverage;
-    int power;
-    public Charger(int y, int x, int coverage, int power) {
-        this.pos = new Point(y, x);
-        this.coverage = coverage;
-        this.power = power;
+    
+    static class BC{
+    	int x;
+    	int y;
+    	int c;
+    	int p;
+    	
+    	BC(int x, int y, int c, int p){
+    		this.x = x;
+    		this.y = y;
+    		this.c = c;
+    		this.p = p;
+    	}
+    	
     }
-}
+    
+    public static void main(String[] args) throws Exception {
+    	br = new BufferedReader(new InputStreamReader(System.in));
+    	sb = new StringBuilder();
+    	int T = Integer.parseInt(br.readLine());
+    	for(int tc=1; tc<T+1; tc++) {
+    		int answer = 0;
+    		positionA = new int[] {1, 1};
+    		positionB = new int[] {10, 10};
+    		st = new StringTokenizer(br.readLine());
+    		int M = Integer.parseInt(st.nextToken());
+    		int A = Integer.parseInt(st.nextToken());
+    		moveA = new int[M]; moveB = new int[M];
+    		st = new StringTokenizer(br.readLine());
+    		for(int i=0;i<M;i++) {
+    			moveA[i] = Integer.parseInt(st.nextToken());
+    		}
+    		st = new StringTokenizer(br.readLine());
+    		for(int i=0;i<M;i++) {
+    			moveB[i] = Integer.parseInt(st.nextToken());
+    		}
+    		BC[] BCs = new BC[A];
+    		for(int i=0; i<A; i++) {
+    			st = new StringTokenizer(br.readLine());
+    			int x = Integer.parseInt(st.nextToken());
+    			int y = Integer.parseInt(st.nextToken());
+    			int c = Integer.parseInt(st.nextToken());
+    			int p = Integer.parseInt(st.nextToken());
+    			BCs[i] = new BC(x, y, c, p);
+    		}
+    		
+    		// 0초일 때 충전
+    		// 1 ~ 20일 때 충전	
+    		int idx = 0;
+    		boolean flag = false;
+    		while(idx < M) {
+    			if(flag) {
+    				//(X, Y) 기준
+    				//A의 X좌표
+    				positionA[0] += dist[moveA[idx]][0];
+    				//A의 Y좌표	
+    				positionA[1] += dist[moveA[idx]][1];
+    				//B의 X좌표
+    				positionB[0] += dist[moveB[idx]][0];		
+    				//B의 Y좌표
+    				positionB[1] += dist[moveB[idx]][1];
+    			}
+    			boolean find = false;
+    			boolean[] possibleA = new boolean[A+1];
+    			boolean[] possibleB = new boolean[A+1];
+    			for(int i=0; i<A; i++) {
+    				if(distance(positionA[0], BCs[i].x, positionA[1], BCs[i].y) <= BCs[i].c) {
+    					possibleA[i] = true;
+    					find = true;
+    				}
+    				if(distance(positionB[0], BCs[i].x, positionB[1], BCs[i].y) <= BCs[i].c) {
+    					possibleB[i] = true;
+    					find = true;
+    				}
+    			}
+    			if(find) {
+    				int max = 0;
+    				for (int i = 0; i <= A; i++) { 
+    				    int aGain = 0;
 
-public class Solution {
+    				    if (i < A) { 
+    				        if (!possibleA[i]) continue;  
+    				        aGain = BCs[i].p;
+    				    }
 
-    static ArrayList<Charger>[][] board;
-    static int[] dr = {0, -1, 0, 1, 0};
-    static int[] dc = {0, 0, 1, 0, -1};
-    static int total;
+    				    for (int j = 0; j <= A; j++) { 
+    				        int bGain = 0;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder out = new StringBuilder();
-        StringTokenizer st;
+    				        if (j < A) {
+    				            if (!possibleB[j]) continue;  
+    				            bGain = BCs[j].p;
+    				        }
 
-        int T = Integer.parseInt(in.readLine());
-        for (int tc = 1; tc <= T; tc++) {
-            total = 0;
+    				        int total;
+    				        if (i < A && j < A && i == j) {
+    				            total = BCs[i].p;
+    				        } else {
+    				            total = aGain + bGain;
+    				        }
 
-            board = new ArrayList[10][10];
-            for (int i = 0; i < 10; i++) {
-                for (int j = 0; j < 10; j++) {
-                    board[i][j] = new ArrayList<>();
-                }
-            }
-
-            st = new StringTokenizer(in.readLine());
-            int moveCount = Integer.parseInt(st.nextToken());
-            int chargerCount = Integer.parseInt(st.nextToken());
-
-            int[] moveA = new int[moveCount];
-            int[] moveB = new int[moveCount];
-
-            st = new StringTokenizer(in.readLine());
-            for (int i = 0; i < moveCount; i++) {
-                moveA[i] = Integer.parseInt(st.nextToken());
-            }
-            st = new StringTokenizer(in.readLine());
-            for (int i = 0; i < moveCount; i++) {
-                moveB[i] = Integer.parseInt(st.nextToken());
-            }
-
-            Charger[] chargers = new Charger[chargerCount];
-            for (int i = 0; i < chargerCount; i++) {
-                st = new StringTokenizer(in.readLine());
-                int x = Integer.parseInt(st.nextToken()) - 1;
-                int y = Integer.parseInt(st.nextToken()) - 1;
-                int cov = Integer.parseInt(st.nextToken());
-                int pow = Integer.parseInt(st.nextToken());
-                chargers[i] = new Charger(y, x, cov, pow);
-                spread(chargers[i]);
-            }
-
-            Point posA = new Point(0, 0);
-            Point posB = new Point(9, 9);
-
-            charge(posA, posB);
-
-            for (int i = 0; i < moveCount; i++) {
-                posA.r += dr[moveA[i]];
-                posA.c += dc[moveA[i]];
-                posB.r += dr[moveB[i]];
-                posB.c += dc[moveB[i]];
-                charge(posA, posB);
-            }
-
-            out.append("#").append(tc).append(" ").append(total).append("\n");
-        }
-        System.out.print(out);
-    }
-
-    static void spread(Charger ch) {
-        int[][] visited = new int[10][10];
-        ArrayDeque<Point> q = new ArrayDeque<>();
-        visited[ch.pos.r][ch.pos.c] = 1;
-        board[ch.pos.r][ch.pos.c].add(ch);
-        q.addLast(new Point(ch.pos.r, ch.pos.c));
-
-        while (!q.isEmpty()) {
-            Point cur = q.pollFirst();
-            for (int d = 1; d <= 4; d++) {
-                int nr = cur.r + dr[d];
-                int nc = cur.c + dc[d];
-                if (nr < 0 || nr >= 10 || nc < 0 || nc >= 10) continue;
-                if (visited[nr][nc] == 0) {
-                    visited[nr][nc] = visited[cur.r][cur.c] + 1;
-                    board[nr][nc].add(ch);
-                    if (visited[nr][nc] <= ch.coverage) {
-                        q.addLast(new Point(nr, nc));
-                    }
-                }
-            }
-        }
-    }
-
-    static void charge(Point a, Point b) {
-        ArrayList<Charger> listA = board[a.r][a.c];
-        ArrayList<Charger> listB = board[b.r][b.c];
-        int best = 0;
-
-        if (listA.isEmpty() && listB.isEmpty()) return;
-        else if (listA.isEmpty()) {
-            for (Charger cb : listB) {
-                best = Math.max(best, cb.power);
-            }
-        } else if (listB.isEmpty()) {
-            for (Charger ca : listA) {
-                best = Math.max(best, ca.power);
-            }
-        } else {
-            for (Charger ca : listA) {
-                for (Charger cb : listB) {
-                    if (ca == cb) {
-                        best = Math.max(best, (ca.power + cb.power) / 2);
-                    } else {
-                        best = Math.max(best, ca.power + cb.power);
-                    }
-                }
-            }
-        }
-        total += best;
+    				        if (total > max) max = total;
+    				    }
+    				}
+        			answer += max;
+    			}
+    			
+    			if(!flag) {
+    				flag = true;
+    			}
+    			else {
+    				idx ++;
+    			}
+    		}
+    		sb.append("#").append(tc).append(" ").append(answer).append("\n");
+    	}
+    	bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    	bw.write(sb.toString());
+    	bw.flush();
+    	bw.close();
     }
 }
