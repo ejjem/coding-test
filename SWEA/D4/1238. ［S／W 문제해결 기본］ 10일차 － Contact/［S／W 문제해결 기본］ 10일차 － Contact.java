@@ -17,7 +17,6 @@ public class Solution {
 		}
 		
 		for(int tc=1; tc<11; tc++) {
-			int answer = 0;
 			st = new StringTokenizer(br.readLine());
 			int N = Integer.parseInt(st.nextToken());
 			int start = Integer.parseInt(st.nextToken());
@@ -33,13 +32,14 @@ public class Solution {
 			int[] visited = new int[101];
 			q.offerLast(new Node(start, 1));
 			visited[start] = 1;
-			int depth = 1;
 			while(!q.isEmpty()) {
-				while(!q.isEmpty() && q.peekFirst().depth == depth) {
+				int l = q.size();
+				for(int i=0; i<l; i++) {
 					Node tmp_node = q.pollFirst();
 					//System.out.println("---");
 					//System.out.println(tmp_node.number);
 					int tmp = tmp_node.number;
+					int depth = tmp_node.depth;
 					if(graph.containsKey(tmp)) {
 						for(int n : graph.get(tmp)) {
 							if(visited[n] == 0) {
@@ -49,10 +49,17 @@ public class Solution {
 						}
 					}
 				}
-				depth ++;
 			}
+			int max = 0;
+			int answer = 0;
 			for(int i=0; i<101; i++) {
-				if(visited[i] == depth-1 && answer < i) answer = i;
+				if(visited[i] > max) {
+					max = visited[i];
+					answer = i;
+				}
+				else if(visited[i] == max) {
+					answer = i;
+				}
 			}
 			//System.out.println(Arrays.toString(visited));
 			sb.append("#").append(tc).append(" ").append(answer).append("\n");
