@@ -1,9 +1,7 @@
 import java.util.*;
-import java.lang.*;
 import java.io.*;
 
-
-class Solution {
+class Solution{
     static BufferedReader br;
     static BufferedWriter bw;
     static StringBuilder sb;
@@ -69,7 +67,7 @@ class Solution {
     			BCs[i] = new BC(x, y, c, p);
     		}
     		
-    		
+
     		
     		int idx = 0;
     		// flag는 0초(시작 위치) 충전량 계산용
@@ -103,7 +101,7 @@ class Solution {
     				}
     			}
     			
-    			// 게산 로직, 누구 1명이라도 충전할 수 있을 때 계산
+    			// 계산 로직, 누구 1명이라도 충전할 수 있을 때 계산
     			if(find) {
     				int max = 0;
     				for (int i = 0; i<A; i++) {
@@ -113,6 +111,7 @@ class Solution {
     				        int bGain = 0;
         				    if (possibleB[j]) bGain = BCs[j].p;
     				        int total;
+    				        // 동시에 선택했을 때는 절반
     				        if (i == j && possibleA[i] && possibleB[j]) total = BCs[i].p;
     				        else {
     				            total = aGain + bGain;
