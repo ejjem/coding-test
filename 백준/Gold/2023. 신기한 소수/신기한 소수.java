@@ -3,9 +3,10 @@ import java.io.*;
 
 public class Main {
 	static int N;
-	static char[] answer;
+	static int[] answer;
 	static StringBuilder sb;
-	static char[] nums = {'1', '2', '3', '5', '7', '9'};
+	//static char[] nums = {'1', '2', '3', '5', '7', '9'};
+	static int[] nums = {1, 2, 3, 5, 7, 9};
 	static boolean isPrime(int n) {
 	    if (n < 2) return false;
 	    if (n % 2 == 0) return n == 2;  
@@ -25,10 +26,10 @@ public class Main {
 			return;
 		}
 		//System.out.println("depth: " + depth);
-		for(char num : nums) {
-			int tmp = num - '0';
+		for(int num : nums) {
+			int tmp = num;
 			for(int i=0; i<depth; i++) {
-				tmp += (answer[i] - '0') * Math.pow(10, depth - i);
+				tmp += answer[i] * Math.pow(10, depth - i);
 			}
 			if(isPrime(tmp)) {
 				answer[depth]  = num;
@@ -42,7 +43,7 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		sb = new StringBuilder();
 		N = Integer.parseInt(br.readLine());
-		answer = new char[N];
+		answer = new int[N];
 		
 		DFS(0);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
