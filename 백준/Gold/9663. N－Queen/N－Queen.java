@@ -5,27 +5,27 @@ import java.util.*;
 class Main {
     static int N;
     static int answer;
-    static boolean isPossible(int[] board, int depth){
-        for(int i=0; i<depth; i++){
-                if( (depth - i) == Math.abs(board[i] - board[depth]) || board[i] == board[depth]) return false;
-        }
-        return true;
-    }
-    static void DFS(int depth, int[] board){
+    static boolean[] col, diag1, diag2;
+    static void DFS(int depth){
         if(depth == N){ answer ++; return; }
         for(int i=0; i<N; i++){
-            board[depth] = i;
-            if(isPossible(board, depth)){
-                DFS(depth+1, board);
-            }
+            int d1 = depth + i;
+            int d2 = depth - i + N - 1;
+            if(col[i] || diag1[d1] || diag2[d2]) continue;
+            
+            col[i] = diag1[d1] = diag2[d2] = true;
+            DFS(depth + 1);
+            col[i] = diag1[d1] = diag2[d2] = false;
         }
     }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader((System.in)));
         N = Integer.parseInt(br.readLine());
-        int[] board = new int[N];
+        col = new boolean[N];
+        diag1 = new boolean[2*N - 1];
+        diag2 = new boolean[2*N - 1];
         answer = 0;
-        DFS(0, board);
+        DFS(0);
         System.out.println(answer);
 
     }
