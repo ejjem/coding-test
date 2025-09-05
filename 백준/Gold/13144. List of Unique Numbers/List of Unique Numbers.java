@@ -5,15 +5,6 @@ class Main {
     static int[] nums;
     static int N;
     static int answer;
-    static int search(int start, int end){
-        do{
-            if(end == N-1){
-                return -1;
-            }
-            end++;
-        }while(nums[start] != nums[end]);
-        return end;
-    }
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
