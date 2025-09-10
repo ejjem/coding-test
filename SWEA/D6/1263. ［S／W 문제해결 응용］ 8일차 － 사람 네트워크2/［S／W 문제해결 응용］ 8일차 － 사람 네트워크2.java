@@ -12,13 +12,11 @@ public class Solution {
         	st = new StringTokenizer(br.readLine());
         	int N = Integer.parseInt(st.nextToken());
         	int[][] graph = new int[N][N];
-        	for(int i=0; i<N; i++) {
-        		Arrays.fill(graph[i], Integer.MAX_VALUE);
-        		graph[i][i] = 0;
-        	}
+        	
         	for(int i=0; i<N; i++) {
         		for(int j=0; j<N; j++) {
         			if(Integer.parseInt(st.nextToken()) == 1) graph[i][j] = 1;
+        			else if(i != j) graph[i][j] = 10000;
         		}
         	}
         	
@@ -35,7 +33,7 @@ public class Solution {
         	for(int i=0; i<N; i++) {
         		int tmp = 0;
         		for(int j=0; j<N; j++) {
-        			if(graph[i][j] != Integer.MAX_VALUE) tmp += graph[i][j];
+        			if(graph[i][j] != 10000) tmp += graph[i][j];
         		}
         		answer = Math.min(answer, tmp);
         	}
