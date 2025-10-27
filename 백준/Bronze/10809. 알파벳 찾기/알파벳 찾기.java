@@ -1,25 +1,21 @@
-import java.util.*;
-import java.lang.*;
 import java.io.*;
+import java.util.*;
 
-// The main method must be in a class named "Main".
 class Main {
-    public static void main(String[] args) throws Exception{
-        // a: 97, z: 122
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	HashMap<Character, Integer> map = new HashMap<>();
-    	for(int i = 97; i<123; i++) {
-    		char alph = (char)i;
-    		map.put(alph, -1);
-    	}
-    	String target = br.readLine();
-    	for(int idx=0;idx<target.length();idx++) {
-    		char ch = target.charAt(idx);
-    		if(map.get(ch) == -1) map.replace(ch, idx);
-    	}
-    	for(int i = 97; i<123; i++) {
-    		char alph = (char)i;
-    		System.out.print(map.get(alph) + " ");
-    	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
+        int[] cnt = new int[26];
+        Arrays.fill(cnt, -1);
+        String str = br.readLine();
+        for(int i=0; i<str.length(); i++){
+            char c = str.charAt(i);
+            int idx = (int)c - (int)'a';
+            if(cnt[idx] == -1) cnt[idx] = i;
+        }
+        for(int i=0; i<26; i++){
+            sb.append(cnt[i]).append(" ");
+        }
+        System.out.println(sb);
     }
 }
