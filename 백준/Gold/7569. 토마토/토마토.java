@@ -42,27 +42,30 @@ class Main {
             System.out.println("0"); 
             return;
         }
-        int day = -1;
-        while(!deque.isEmpty()){
-            day ++;
-            while(!deque.isEmpty() && deque.peek()[3] == day){
-                int[] cur = deque.pollFirst();
-                int z = cur[0]; int y = cur[1]; int x = cur[2]; day = cur[3];
-                for(int i=0; i<6; i++){
-                    int nz = dir[i][0] + z; int ny = dir[i][1] + y; int nx = dir[i][2] + x;
-                    if(isPossible(nz, ny, nx) && board[nz][ny][nx] == 0){
-                        board[nz][ny][nx] = 1;
-                        Tomato ++;
-                        deque.offerLast(new int[]{nz, ny, nx, day+1});
-                    }
+        int day = 0;
+        while (!deque.isEmpty()) {
+            int[] cur = deque.pollFirst();
+            int z = cur[0], y = cur[1], x = cur[2], d = cur[3];
+            day = d;
+
+            for (int i = 0; i < 6; i++) {
+                int nz = z + dir[i][0];
+                int ny = y + dir[i][1];
+                int nx = x + dir[i][2];
+
+                if (isPossible(nz, ny, nx) && board[nz][ny][nx] == 0) {
+                    board[nz][ny][nx] = 1;
+                    Tomato++;
+                    deque.offerLast(new int[]{nz, ny, nx, d + 1});
                 }
             }
         }
         if(Tomato + noTomato != total){
             System.out.println("-1");
-            return;
         }
-        System.out.println(day);
+        else{
+            System.out.println(day);
+        }
         return;
     }
 }
