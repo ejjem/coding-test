@@ -1,127 +1,76 @@
-import java.io.IOException;
 import java.io.*;
 import java.util.*;
 
-class Main {
-    static class Pocket{
-        int num;
-        StringBuilder sb;
-        
+public class Main {
+    static int D(int x) { return (x * 2) % 10000; }
+    static int S(int x) { return (x == 0) ? 9999 : x - 1; }
+    static int L(int x) { return (x % 1000) * 10 + (x / 1000); }
+    static int R(int x) { return (x % 10) * 1000 + (x / 10); }
 
-
-        Pocket(int num, String str){
-            this.num = num;
-            sb = new StringBuilder();
-            sb.append(str);
-        }
-    }
-    static char[] oper = {'D', 'S', 'L', 'R'};
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringBuilder answers = new StringBuilder();
-        StringTokenizer st;
-        
-        
+        StringBuilder out = new StringBuilder();
         int T = Integer.parseInt(br.readLine());
-        for(int tc=0; tc<T; tc++){
-            StringBuilder answer = new StringBuilder();
-            boolean[] visited = new boolean[10000];
-            Deque<Pocket> q = new ArrayDeque<>();
-            st = new StringTokenizer(br.readLine());
-            int A = Integer.parseInt(st.nextToken());
-            visited[A] = true;
-            int B = Integer.parseInt(st.nextToken());
-            q.offerLast(new Pocket(A, ""));
-            boolean flag = false;
-            while(true){
-                StringBuilder ssb;
-                Pocket cur = q.pollFirst();
-                boolean find = false;
-                int now = cur.num;
-                int d1 = cur.num / 1000;
-                int d2 = (cur.num - d1*1000) / 100;
-                int d3 = (cur.num - d1*1000 - d2*100) / 10;
-                int d4 = cur.num - d1*1000 - d2*100 - d3*10;
-                for(int i=0; i<4; i++){
-                    char o = oper[i];
-                    switch(o){
-                        case 'D':
-                            ssb = new StringBuilder();
-                            ssb.append(cur.sb);
-                            int tmp = now * 2;
-                            if(tmp > 9999) tmp = tmp % 10000;
-                            if(tmp == B){
-                                answer.append(ssb).append('D');
-                                find = true;
-                                break;
-                            }
-                            if(!visited[tmp]){
-                                visited[tmp] = true;
-                                q.offerLast(new Pocket(tmp, ssb.append('D').toString()));
-                            }
-                            //System.out.println(ssb.toString() + ": " + tmp);
-                            break;
-                        case 'S':
-                            ssb = new StringBuilder();
-                            ssb.append(cur.sb);
-                            int tmp2 = (now == 0) ? 9999 : now - 1;
-                            if(tmp2 == B){
-                                answer.append(ssb).append('S');
-                                find = true;
-                                break;
-                            }
-                            if(!visited[tmp2]){
-                                visited[tmp2] = true;
-                                q.offerLast(new Pocket(tmp2, ssb.append('S').toString()));
-                            }
-                            //System.out.println(ssb.toString() + ": " + tmp2);
-                            break;
 
-                        case 'L':
-                            ssb = new StringBuilder();
-                            ssb.append(cur.sb);
-                            int tmp3 = d2 * 1000 + d3 * 100 + d4 * 10 + d1;
-                            if(tmp3 == B){
-                                answer.append(ssb).append('L');
-                                find = true;
-                                break;
-                            }
-                            if(!visited[tmp3]){
-                                visited[tmp3] = true;
-                                q.offerLast(new Pocket(tmp3, ssb.append('L').toString()));
-                            }
-                            //System.out.println(ssb.toString() + ": " + tmp3);
-                            break;
-                        case 'R':
-                            ssb = new StringBuilder();
-                            ssb.append(cur.sb);
-                            int tmp4 = d4 * 1000 + d1 * 100 + d2 * 10 + d3;
-                            if(tmp4 == B){
-                                answer.append(ssb).append('R');
-                                find = true;
-                                break;
-                            }
-                            if(!visited[tmp4]){
-                                visited[tmp4] = true;
-                                q.offerLast(new Pocket(tmp4, ssb.append('R').toString()));
-                            }
-                            //System.out.println(ssb.toString() + ": " + tmp4);
-                            break;
-                    }
-                    if(find){
-                        answers.append(answer).append("\n");
-                        flag = true;
-                        break;
-                    }
+        while (T-- > 0) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int A = Integer.parseInt(st.nextToken());
+            int B = Integer.parseInt(st.nextToken());
+
+            boolean[] vis = new boolean[10000];
+            int[] prev = new int[10000];
+            char[] how = new char[10000];
+            Arrays.fill(prev, -1);
+
+            ArrayDeque<Integer> q = new ArrayDeque<>();
+            q.offer(A);
+            vis[A] = true;
+
+            while (!q.isEmpty() && !vis[B]) {
+                int cur = q.poll();
+
+                int n = D(cur);
+                if (!vis[n]) {
+                    vis[n] = true;
+                    prev[n] = cur;
+                    how[n] = 'D';
+                    q.offer(n);
                 }
-                if(flag){
-                    break;
+
+                n = S(cur);
+                if (!vis[n]) {
+                    vis[n] = true;
+                    prev[n] = cur;
+                    how[n] = 'S';
+                    q.offer(n);
+                }
+
+                n = L(cur);
+                if (!vis[n]) {
+                    vis[n] = true;
+                    prev[n] = cur;
+                    how[n] = 'L';
+                    q.offer(n);
+                }
+
+                n = R(cur);
+                if (!vis[n]) {
+                    vis[n] = true;
+                    prev[n] = cur;
+                    how[n] = 'R';
+                    q.offer(n);
                 }
             }
-        }
-        bw.write(answers.toString());
-        bw.flush(); bw.close();
 
+            StringBuilder ans = new StringBuilder();
+            int cur = B;
+            while (cur != A) {
+                ans.append(how[cur]);
+                cur = prev[cur];
+            }
+            out.append(ans.reverse()).append('\n');
+        }
+
+        System.out.print(out);
     }
 }
